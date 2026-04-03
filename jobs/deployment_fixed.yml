@@ -1,0 +1,12 @@
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+name: amazon-review-deployment
+endpoint_name: amazon-review-endpoint
+model: azureml:amazon_review_model:1
+code_configuration:
+  code: ../src
+  scoring_script: score_fixed.py
+environment:
+  conda_file: ../env/inference_conda.yml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest
+instance_type: Standard_F2s_v2
+instance_count: 1

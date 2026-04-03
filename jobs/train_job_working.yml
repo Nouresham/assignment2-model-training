@@ -1,0 +1,22 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+display_name: amazon_review_training_working
+experiment_name: amazon_review_training_experiment
+
+code: ../src
+command: python train_final_working.py --data ${{inputs.data}} --output ${{outputs.model_output}}
+
+inputs:
+  data:
+    type: uri_folder
+    path: azureml:amazon_electronics_features_v1_sampled:1
+
+outputs:
+  model_output:
+    type: uri_folder
+
+environment:
+  conda_file: ../env/conda.yml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest
+
+compute: azureml:cpu-cluster

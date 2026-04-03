@@ -1,0 +1,18 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+display_name: inspect_feature_data
+experiment_name: debug_experiment
+
+code: ../src
+command: python inspect_feature_data.py --data ${{inputs.data}}
+
+inputs:
+  data:
+    type: uri_folder
+    path: azureml:amazon_review_merged_features_train:1
+
+environment:
+  conda_file: ../env/conda.yml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest
+
+compute: azureml:cpu-cluster

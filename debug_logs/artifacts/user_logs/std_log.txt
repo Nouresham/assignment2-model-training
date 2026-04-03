@@ -1,0 +1,2 @@
+Searching for parquet files in: /mnt/azureml/cr/j/
+No parquet files found in the mounted path

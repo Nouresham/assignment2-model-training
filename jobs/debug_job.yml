@@ -1,0 +1,22 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+display_name: debug_data_structure
+experiment_name: debug_experiment
+
+code: ../src
+command: python train_debug.py --data ${{inputs.data}} --output ${{outputs.output}}
+
+inputs:
+  data:
+    type: uri_folder
+    path: azureml:amazon_electronics_features_v1_sampled:1
+
+outputs:
+  output:
+    type: uri_folder
+
+environment:
+  conda_file: ../env/conda.yml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest
+
+compute: azureml:cpu-cluster

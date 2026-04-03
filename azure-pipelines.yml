@@ -1,0 +1,43 @@
+trigger:
+  branches:
+    include:
+      - lab4_feature_engineering
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  RESOURCE_GROUP: rg-60103990
+  WORKSPACE_NAME: Amazon-Electronics-Lab-60103990
+  EXPERIMENT_NAME: amazon_review_training
+
+steps:
+- checkout: self
+
+- task: AzureCLI@2
+  displayName: 'Install Azure ML Extension & Train Model'
+  inputs:
+    azureSubscription: 'UDST-CCIT-DSAI3202-3'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      # Install Azure ML extension
+      az extension add -n ml -y
+      
+      # Set defaults
+      az configure --defaults group=$(RESOURCE_GROUP) workspace=$(WORKSPACE_NAME)
+      
+      # Submit training job
+      echo "Submitting training job..."
+      JOB_NAME=$(az ml job create --file jobs/train_quick.yml --query name -o tsv)
+      echo "Job Name: $JOB_NAME"
+      
+      # Wait for completion
+      echo "Waiting for job to complete..."
+      az ml job stream --name $JOB_NAME
+      
+      # Register model
+      echo "Registering model..."
+      az ml model create --name amazon_review_model --version 2 --path "azureml://jobs/$JOB_NAME/outputs/model_output/model.pkl" --type custom_model
+      
+      echo "Pipeline completed successfully!"

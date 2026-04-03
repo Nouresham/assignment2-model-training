@@ -1,0 +1,18 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+display_name: list_columns_debug
+experiment_name: debug_experiment
+
+code: ../src
+command: python list_columns.py --data ${{inputs.data}}
+
+inputs:
+  data:
+    type: uri_folder
+    path: azureml:amazon_electronics_features_v1_sampled:1
+
+environment:
+  conda_file: ../env/conda.yml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest
+
+compute: azureml:cpu-cluster
